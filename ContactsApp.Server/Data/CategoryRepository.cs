@@ -7,6 +7,8 @@ namespace ContactsApp.Server.Data
     {
         Task<int?> GetCategoryIdAsync(string? categoryName);
 
+        Task<List<Category>> GetCategoriesAsync();
+
     }
 
     public class CategoryRepository : ICategoryRepository
@@ -24,5 +26,9 @@ namespace ContactsApp.Server.Data
             return category?.Id;
         }
 
+        public async Task<List<Category>> GetCategoriesAsync()
+        {
+            return await _context.Categories.ToListAsync();
+        }
     }
 }

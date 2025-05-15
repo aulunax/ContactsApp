@@ -1,10 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ContactsApp.Server.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ContactsApp.Server.Data
 {
     public interface ISubcategoryRepository
     {
         Task<int?> GetSubcategoryIdAsync(string? subcategoryName);
+
+        Task<List<Subcategory>> GetSubcategoriesForCategoryByIdAsync(int? categoryId);
 
     }
 
@@ -21,6 +24,13 @@ namespace ContactsApp.Server.Data
         {
             var subcategory = await _context.Subcategories.FirstOrDefaultAsync(c => c.Name == subcategoryName);
             return subcategory?.Id;
+        }
+
+        public async Task<List<Subcategory>> GetSubcategoriesForCategoryByIdAsync(int? categoryId)
+        {
+            return await _context.Subcategories
+                .Where(c => c.CategoryId == categoryId)
+                .ToListAsync();
         }
 
     }
