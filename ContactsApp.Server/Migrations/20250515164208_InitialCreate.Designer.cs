@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ContactsApp.Server.Migrations
 {
     [DbContext(typeof(ContactsDbContext))]
-    [Migration("20250515162928_InitialCreate")]
+    [Migration("20250515164208_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -90,6 +90,9 @@ namespace ContactsApp.Server.Migrations
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.HasIndex("SubcategoryId");
 
                     b.HasIndex("UserId");
@@ -149,6 +152,9 @@ namespace ContactsApp.Server.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });

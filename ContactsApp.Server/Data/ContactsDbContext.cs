@@ -14,10 +14,23 @@ namespace ContactsApp.Server.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            // User setup
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Contacts)
                 .WithOne(c => c.User)
                 .HasForeignKey(c => c.UserId);
+
+            // Contact and Categories setup
+
+            modelBuilder.Entity<Contact>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
 
             modelBuilder.Entity<Contact>()
                 .HasOne(c => c.Category)

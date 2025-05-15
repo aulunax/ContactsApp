@@ -123,6 +123,12 @@ namespace ContactsApp.Server.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Contacts_Email",
+                table: "Contacts",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Contacts_SubcategoryId",
                 table: "Contacts",
                 column: "SubcategoryId");
@@ -136,6 +142,12 @@ namespace ContactsApp.Server.Migrations
                 name: "IX_Subcategories_CategoryId",
                 table: "Subcategories",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
         }
 
         /// <inheritdoc />

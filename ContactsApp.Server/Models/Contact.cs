@@ -16,7 +16,7 @@
 
         /// <summary>
         /// Custom subcatregory name used when category is selected as "Other"
-        /// Empty byu default
+        /// Empty by default
         /// </summary>
         public string? CustomSubcategory { get; set; } 
 

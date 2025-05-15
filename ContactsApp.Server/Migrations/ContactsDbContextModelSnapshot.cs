@@ -87,6 +87,9 @@ namespace ContactsApp.Server.Migrations
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.HasIndex("SubcategoryId");
 
                     b.HasIndex("UserId");
@@ -146,6 +149,9 @@ namespace ContactsApp.Server.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
