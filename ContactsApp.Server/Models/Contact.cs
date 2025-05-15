@@ -9,10 +9,10 @@
         public string Email { get; set; }
 
         public Category Category { get; set; }
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
 
         public Subcategory Subcategory { get; set; }
-        public int SubcategoryId { get; set; }
+        public int? SubcategoryId { get; set; }
 
         /// <summary>
         /// Custom subcatregory name used when category is selected as "Other"

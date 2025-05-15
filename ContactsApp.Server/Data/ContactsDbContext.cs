@@ -35,7 +35,8 @@ namespace ContactsApp.Server.Data
             modelBuilder.Entity<Contact>()
                 .HasOne(c => c.Category)
                 .WithMany()
-                .HasForeignKey(c => c.CategoryId);
+                .HasForeignKey(c => c.CategoryId)
+                .IsRequired(false);
 
             modelBuilder.Entity<Contact>()
                 .HasOne(c => c.Subcategory)
