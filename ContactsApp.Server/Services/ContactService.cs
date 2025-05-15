@@ -1,5 +1,6 @@
 ﻿using ContactsApp.Server.Data;
 using ContactsApp.Server.DTOs;
+using ContactsApp.Server.Models;
 
 namespace ContactsApp.Server.Services
 {
@@ -10,16 +11,24 @@ namespace ContactsApp.Server.Services
         Task<bool> ContactExistsAsync(int contactId);
         Task<bool> ContactExistsInUserAsync(int contactId, int userId);
 
+        Task<bool> AddContactAsync(ContactDto contactDto);
+        Task<bool> UpdateContactAsync(int contactId, ContactDto contactDto);
+        Task<bool> DeleteContactAsync(int contactId);
+
         Task<ContactDto?> GetContactById(int contactId);   
     }
 
     public class ContactService : IContactService
     {
         private readonly IContactRepository _contactRepository;
+        private readonly ISubcategoryRepository _subcategoryRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public ContactService(IContactRepository contactRepository)
+        public ContactService(IContactRepository contactRepository, ISubcategoryRepository subcategoryRepository, ICategoryRepository categoryRepository)
         {
             _contactRepository = contactRepository;
+            _subcategoryRepository = subcategoryRepository;
+            _categoryRepository = categoryRepository;
         }
 
         public async Task<List<ContactDto>> GetAllContactsForUserIdAsync(int userId)
@@ -81,6 +90,56 @@ namespace ContactsApp.Server.Services
         {
             var contacts = await _contactRepository.GetAllContactsForUserIdAsync(userId);
             return contacts.Any(c => c.Id == contactId);
+        }
+
+        public async Task<bool> AddContactAsync(ContactDto contactDto)
+        {
+            var categoryId = await _categoryRepository.GetCategoryIdAsync(contactDto.Category);
+            var subcategoryId = await _subcategoryRepository.GetSubcategoryIdAsync(contactDto.Subcategory);
+
+            // If the subcategory is not found in dictionary, but has content, we assume it's a custom subcategory 
+            var customSubcategory = (!string.IsNullOrEmpty(contactDto.Subcategory) && subcategoryId == null) ? contactDto.Subcategory : null;
+
+            var contact = new Contact
+            {
+                Name = contactDto.Name,
+                Surname = contactDto.Surname,
+                Email = contactDto.Email,
+                PhoneNumber = contactDto.PhoneNumber,
+                CategoryId = categoryId,
+                SubcategoryId = subcategoryId,
+                CustomSubcategory = customSubcategory,
+                BirthDate = contactDto.BirthDate,
+                UserId = contactDto.UserId
+            };
+
+            return await _contactRepository.AddContactAsync(contact);
+        }
+
+        public async Task<bool> UpdateContactAsync(int contactId, ContactDto contactDto)
+        {
+            var categoryId = await _categoryRepository.GetCategoryIdAsync(contactDto.Category);
+            var subcategoryId = await _subcategoryRepository.GetSubcategoryIdAsync(contactDto.Subcategory);
+
+            // If the subcategory is not found in dictionary, but has content, we assume it's a custom subcategory 
+            var customSubcategory = (!string.IsNullOrEmpty(contactDto.Subcategory) && subcategoryId == null) ? contactDto.Subcategory : null;
+            var contact = new Contact
+            {
+                Name = contactDto.Name,
+                Surname = contactDto.Surname,
+                Email = contactDto.Email,
+                PhoneNumber = contactDto.PhoneNumber,
+                CategoryId = categoryId,
+                SubcategoryId = subcategoryId,
+                CustomSubcategory = customSubcategory,
+                BirthDate = contactDto.BirthDate,
+            };
+            return await _contactRepository.UpdateContactAsync(contactId, contact);
+        }
+
+        public async Task<bool> DeleteContactAsync(int contactId)
+        {
+            return await _contactRepository.DeleteContactAsync(contactId);
         }
     }
 }

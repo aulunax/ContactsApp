@@ -21,7 +21,7 @@
         public string? CustomSubcategory { get; set; } 
 
         public string? PhoneNumber { get; set; }
-        public string? BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
 
         public User User { get; set; }
         public int UserId { get; set; }

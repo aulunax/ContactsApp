@@ -54,35 +54,7 @@ namespace ContactsApp.Server.Controllers
             return contactList;
         }
 
-        // GET: api/Users/{userId}/{contactId}
-        /// <summary>
-        /// Get detailed contact info for a user by userId and contactId.
-        /// </summary>
-        /// <param name="userId">Integer representing Id of the User</param>
-        /// <param name="contactId">Integer representing Id of the Contact</param>
-        /// <returns>
-        /// Returns a detailed contact info for a contact with contactId.
-        /// </returns>
-        [HttpGet("{userId}/{contactId}")]
-        public async Task<ActionResult<ContactDto>> GetContactForUser(int userId, int contactId)
-        {
 
-            var contactExists = await _contactService.ContactExistsInUserAsync(contactId, userId);
-
-            if (contactExists == false)
-            {
-                return NotFound();
-            }
-
-            var contact = await _contactService.GetContactById(contactId);
-
-            if (contact == null)
-            {
-                return NotFound();
-            }
-
-            return contact;
-        }
 
         //// PUT: api/Users/5
         //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

@@ -7,6 +7,8 @@ namespace ContactsApp.Server.Data
     {
         Task<List<User>> GetAllUsersAsync();
         Task<bool> UserExistsByIdAsync(int id);
+        Task<User?> UserByEmailAsync(string email);
+
     }
 
     public class UserRepository : IUserRepository
@@ -26,6 +28,12 @@ namespace ContactsApp.Server.Data
         public async Task<bool> UserExistsByIdAsync(int id)
         {
             return await _context.Users.AnyAsync(u => u.Id == id);
+        }
+
+        public async Task<User?> UserByEmailAsync(string email)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == email);
         }
     }
 }
