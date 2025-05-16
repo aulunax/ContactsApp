@@ -1,6 +1,7 @@
 ﻿using ContactsApp.Server.DTOs;
 using ContactsApp.Server.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsApp.Server.Controllers
@@ -10,22 +11,40 @@ namespace ContactsApp.Server.Controllers
     public class AuthController : ControllerBase
     {
 
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
 
-        public AuthController(AuthService authService)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginDto loginDto)
+        [HttpPost("login")]
+        public async Task<ActionResult<string>> Login([FromBody] LoginDto loginDto)
         {
-            var result = await _authService.LoginAsync(loginDto);
+            var jwtToken = await _authService.LoginAsync(loginDto);
 
-            if (result == null)
+            if (jwtToken == null)
                 return Unauthorized("Invalid credentials");
 
-            return result;
+            return Ok(jwtToken);
+        }
+
+        [HttpPost("register")]
+        public async Task<ActionResult<AuthResultDto>> Register([FromBody] RegisterDto registerDto)
+        {
+            var result = await _authService.RegisterAsync(registerDto);
+
+
+            var authResult = new AuthResultDto
+            {
+                Succeeded = result.Succeeded,
+                Errors = result.Errors.Select(e => e.Description).ToList()
+            };
+
+            if (result.Succeeded)
+                return Ok(authResult);
+
+            return BadRequest(authResult);
         }
     }
 }

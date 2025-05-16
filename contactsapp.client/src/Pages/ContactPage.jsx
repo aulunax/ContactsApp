@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 
-
-import axios from 'axios';
+import axios from '../Services/axios';
 
 import '../App.css';
+import { handleDeleteContact } from '../Services/contact';
 function ContactPage() {
 
     const { userId, contactId } = useParams();
     const [ contactData, setContactData] = useState(null);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         populateContactData();
@@ -18,6 +20,7 @@ function ContactPage() {
         <div>
             <Link to={`/users/${userId}`}>Go back</Link>
             <h2>Contact Details:</h2>
+            <button onClick={ handleDeleteContactInside(contactId) }>Delete</button>
             <div>
                 {contactData ?
                     <div key={contactData.id}>
@@ -35,6 +38,13 @@ function ContactPage() {
             </div>
         </div>
     )
+
+    async function handleDeleteContactInside(contactId) {
+        handleDeleteContact(contactId);
+        navigate(`/users/${userId}`);
+    }
+
+
 
     function populateContactData() {
         axios.get(`/api/Contacts/${contactId}`)

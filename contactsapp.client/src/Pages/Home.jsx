@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../App.css';
-import axios from 'axios';
+import axios from '../Services/axios';
+import UsernameInfo from '../Components/UsernameComponent';
 
 function Home() {
 
@@ -14,7 +15,8 @@ function Home() {
 
     return (
         <div>
-        <h1>Users:</h1>
+            <h1>Users:</h1>
+            { UsernameInfo() }
             <div>
             { userData && !error ?
                 userData.map((user) => {

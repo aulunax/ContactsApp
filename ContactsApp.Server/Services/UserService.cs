@@ -23,7 +23,7 @@ namespace ContactsApp.Server.Services
             return users.Select(user => new UserDto
             {
                 Id = user.Id,
-                Username = user.Username,
+                Username = user.UserName,
             }).ToList();
         }
 

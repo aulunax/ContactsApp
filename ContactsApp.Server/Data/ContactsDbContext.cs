@@ -1,19 +1,22 @@
 ﻿using ContactsApp.Server.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
 
 namespace ContactsApp.Server.Data
 {
-    public class ContactsDbContext : DbContext
+    public class ContactsDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
 
-        public DbSet<User> Users { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Subcategory> Subcategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
 
             // User setup
 
@@ -22,9 +25,14 @@ namespace ContactsApp.Server.Data
                 .IsUnique();
 
             modelBuilder.Entity<User>()
+                .HasIndex(u => u.UserName)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
                 .HasMany(u => u.Contacts)
                 .WithOne(c => c.User)
-                .HasForeignKey(c => c.UserId);
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Contact and Categories setup
 

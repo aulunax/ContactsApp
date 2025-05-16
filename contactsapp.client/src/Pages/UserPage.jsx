@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 
-
-import axios from 'axios';
+import axios from '../Services/axios';
 
 import '../App.css'; 
 function UserPage() {
@@ -18,6 +17,8 @@ function UserPage() {
         <div>
             <Link to={`/`}>Go back</Link>
             <h2>Contacts:</h2>
+
+            
             <div>
                 {contactsData  ?
                     contactsData.map(contact => {

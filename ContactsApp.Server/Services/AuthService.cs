@@ -13,61 +13,61 @@ namespace ContactsApp.Server.Services
 
     public interface IAuthService
     {
-        public Task<LoginResponseDto?> LoginAsync(LoginDto dto);
-        public Task<LoginResponseDto?> RegisterAsync(RegisterDto dto);
+        public Task<string?> LoginAsync(LoginDto dto);
+        public Task<IdentityResult> RegisterAsync(RegisterDto dto);
     }
 
     public class AuthService : IAuthService
     {
-        private readonly PasswordHasher<User> _passwordHasher = new();
-
         private readonly IUserRepository _userRepository;
 
-        public AuthService(IUserRepository userRepository)
+        private readonly UserManager<User> _userManager;
+        private readonly IConfiguration _config;
+
+
+        public AuthService(IUserRepository userRepository, UserManager<User> userManager, IConfiguration config)
         {
             _userRepository = userRepository;
+            _userManager = userManager;
+            _config = config;
         }
 
-        public async Task<LoginResponseDto?> LoginAsync(LoginDto dto)
+        public async Task<string?> LoginAsync(LoginDto dto)
         {
-            var user = await _userRepository.UserByEmailAsync(dto.Email);
+            var user = await _userManager.FindByNameAsync(dto.Username);
 
-            if (user == null) 
+            if (user == null || !await _userManager.CheckPasswordAsync(user, dto.Password))
                 return null;
 
-            var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
-            result = PasswordVerificationResult.Success;
-            if (result != PasswordVerificationResult.Success) 
-                return null;
-
-            return new LoginResponseDto
+            var claims = new List<Claim>
             {
-                Email = user.Email,
-                Username = user.Username,
-                Token = "Placeholder"
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName),
             };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _config["Jwt:Issuer"],
+                audience: _config["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(15),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<LoginResponseDto?> RegisterAsync(RegisterDto dto)
+        public async Task<IdentityResult> RegisterAsync(RegisterDto dto)
         {
-            var user = await _userRepository.UserByEmailAsync(dto.Email);
-            if (user != null)
-                return null;
-
-            var newUser = new User
+            var user = new User
             {
+                UserName = dto.Username,
                 Email = dto.Email,
-                Username = dto.Username,
-                PasswordHash = _passwordHasher.HashPassword(null, dto.Password)
             };
-            // Save the new user to the database
-            // await _userRepository.AddUserAsync(newUser);
-            return new LoginResponseDto
-            {
-                Email = newUser.Email,
-                Username = newUser.Username,
-                Token = "Placeholder"
-            };
+
+            return await _userManager.CreateAsync(user, dto.Password);
         }
 
 
