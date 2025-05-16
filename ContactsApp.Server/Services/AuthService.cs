@@ -14,7 +14,7 @@ namespace ContactsApp.Server.Services
     public interface IAuthService
     {
         public Task<LoginResponseDto?> LoginAsync(LoginDto dto);
-        //public Task<LoginResponseDto?> RegisterAsync(RegisterDto dto);
+        public Task<LoginResponseDto?> RegisterAsync(RegisterDto dto);
     }
 
     public class AuthService : IAuthService
@@ -44,6 +44,28 @@ namespace ContactsApp.Server.Services
             {
                 Email = user.Email,
                 Username = user.Username,
+                Token = "Placeholder"
+            };
+        }
+
+        public async Task<LoginResponseDto?> RegisterAsync(RegisterDto dto)
+        {
+            var user = await _userRepository.UserByEmailAsync(dto.Email);
+            if (user != null)
+                return null;
+
+            var newUser = new User
+            {
+                Email = dto.Email,
+                Username = dto.Username,
+                PasswordHash = _passwordHasher.HashPassword(null, dto.Password)
+            };
+            // Save the new user to the database
+            // await _userRepository.AddUserAsync(newUser);
+            return new LoginResponseDto
+            {
+                Email = newUser.Email,
+                Username = newUser.Username,
                 Token = "Placeholder"
             };
         }

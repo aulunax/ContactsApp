@@ -50,6 +50,26 @@ export default defineConfig({
             '^/weatherforecast': {
                 target,
                 secure: false
+            },
+            '^/api/Users': {
+                target,
+                secure: false
+            },
+            '^/api/Contacts': {
+                target,
+                secure: false
+            },
+            '^/api/Categories': {
+                target,
+                secure: false
+            },
+            '^/api/Subcategories': {
+                target,
+                secure: false
+            },
+            '^/api/Auth': {
+                target,
+                secure: false
             }
         },
         port: parseInt(env.DEV_SERVER_PORT || '53820'),
