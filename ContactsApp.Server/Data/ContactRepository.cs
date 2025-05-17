@@ -103,11 +103,17 @@ namespace ContactsApp.Server.Data
 
         public async Task<bool> DeleteContactAsync(int contactId)
         {
+
+
             var contact = await GetContactByIdAsync(contactId);
+
+            Console.WriteLine($"Deleting contact: Id={contactId}");
             if (contact == null)
             {
                 return false;
             }
+            Console.WriteLine($"After Deleting contact: Id={contactId}");
+
 
             try
             {

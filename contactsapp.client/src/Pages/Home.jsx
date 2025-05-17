@@ -16,7 +16,7 @@ function Home() {
     return (
         <div>
             <h1>Users:</h1>
-            { UsernameInfo() }
+            { <UsernameInfo/> }
             <div>
             { userData && !error ?
                 userData.map((user) => {

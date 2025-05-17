@@ -7,7 +7,6 @@ function UsernameInfo() {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        console.log(token)
 
         if (token) {
             try {
@@ -21,7 +20,7 @@ function UsernameInfo() {
         }
     }, []);
 
-    if (!username) return <p>Not logged in. <Link to="/login">Login</Link></p>;
+    if (!username) return <p>Not logged in. <Link to="/login">Login</Link> or <Link to="/register">Register</Link></p>;
 
     return <p>Hello {username}! <button onClick={handleLogout}>Logout</button></p>;
 

@@ -6,6 +6,8 @@ namespace ContactsApp.Server.Services
     public interface ICategoryService
     {
         Task<List<CategoryDto>> GetCategoriesAsync();
+
+        Task<int?> GetCategoryIdAsync(string? categoryName);
     }
 
     public class CategoryService : ICategoryService
@@ -25,6 +27,16 @@ namespace ContactsApp.Server.Services
                 Id = category.Id,
                 Name = category.Name,
             }).ToList();
+        }
+
+        public async Task<int?> GetCategoryIdAsync(string? categoryName)
+        {
+            if (string.IsNullOrEmpty(categoryName))
+            {
+                return null;
+            }
+            var categoryId = await _categoryRepository.GetCategoryIdAsync(categoryName);
+            return categoryId;
         }
     }
 }

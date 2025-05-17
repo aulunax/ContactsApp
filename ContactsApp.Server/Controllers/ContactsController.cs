@@ -55,6 +55,7 @@ namespace ContactsApp.Server.Controllers
             if (userId == null || int.Parse(userId) != contactDto.UserId)
                 return Unauthorized("Unauthorized Access");
 
+            System.Console.WriteLine($"Adding contact: {contactDto.Name}, {contactDto.Surname}, {contactDto.Email}, {contactDto.PhoneNumber}, {contactDto.Category}, {contactDto.Subcategory}, {contactDto.BirthDate}");
 
             var result = await _service.AddContactAsync(contactDto);
 
@@ -92,21 +93,25 @@ namespace ContactsApp.Server.Controllers
         [HttpDelete("{contactId}")]
         public async Task<ActionResult<bool>> DeleteContact(int contactId)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
+            Console.WriteLine($"DeleteContact called with contactId: {contactId}");
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var contact = await _service.GetContactById(contactId);
             var userIdFromContact = contact?.UserId;
 
+            Console.WriteLine($"userId: {userId}, userIdFromContact: {userIdFromContact}");
+
             if (userId == null || int.Parse(userId) != userIdFromContact)
                 return Unauthorized("Unauthorized Access");
+
+            Console.WriteLine($"Deleting contact with ID: {contactId}");
 
             var result = await _service.DeleteContactAsync(contactId);
 
             if (result == false)
                 return BadRequest("Failed to delete contact");
+
+            Console.WriteLine($"Contact with ID: {contactId} deleted successfully");
 
             return Ok();
         }

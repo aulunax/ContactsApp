@@ -68,6 +68,9 @@ namespace ContactsApp.Server.Services
                 return null;
             }
 
+
+            System.Diagnostics.Debug.WriteLine($"Contact: {contact.Name}, {contact.Surname}, {contact.Email}, {contact.PhoneNumber}, {contact.Category?.Name}, {contact.Subcategory?.Name}");
+
             return new ContactDto
             {
                 Id = contact.Id,
@@ -76,8 +79,9 @@ namespace ContactsApp.Server.Services
                 Email = contact.Email,
                 PhoneNumber = contact.PhoneNumber,
                 Category = contact.Category?.Name,
-                Subcategory = contact.Subcategory?.Name,
-                BirthDate = contact.BirthDate
+                Subcategory = string.IsNullOrEmpty(contact.Subcategory?.Name) ? contact.CustomSubcategory : contact.Subcategory?.Name,
+                BirthDate = contact.BirthDate,
+                UserId = contact.UserId
             };
         }
 
@@ -97,8 +101,12 @@ namespace ContactsApp.Server.Services
             var categoryId = await _categoryRepository.GetCategoryIdAsync(contactDto.Category);
             var subcategoryId = await _subcategoryRepository.GetSubcategoryIdAsync(contactDto.Subcategory);
 
+            System.Diagnostics.Debug.WriteLine($"CategoryId: {categoryId}, SubcategoryId: {subcategoryId}");
+
             // If the subcategory is not found in dictionary, but has content, we assume it's a custom subcategory 
             var customSubcategory = (!string.IsNullOrEmpty(contactDto.Subcategory) && subcategoryId == null) ? contactDto.Subcategory : null;
+
+            System.Diagnostics.Debug.WriteLine($"CustomSubcategory: {customSubcategory}");
 
             var contact = new Contact
             {
