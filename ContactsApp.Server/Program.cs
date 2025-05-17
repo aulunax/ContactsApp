@@ -25,7 +25,7 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ISubcategoryService, SubcategoryService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
-
+// Controllers Configuration
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -35,6 +35,7 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "Contacts List API", Version = "v1" });
 
+    // Allow Swagger to use the JWT Bearer token
     var securityScheme = new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -96,7 +97,6 @@ var app = builder.Build();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

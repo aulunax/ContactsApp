@@ -3,11 +3,23 @@ using ContactsApp.Server.DTOs;
 
 namespace ContactsApp.Server.Services
 {
+
+    /// <summary>
+    /// Interface for the subcategory service.
+    /// </summary>
     public interface ISubcategoryService
     {
+        /// <summary>
+        /// Retrieves a list of subcategories for a given category ID.
+        /// </summary>
+        /// <param name="categoryId"> The ID of the category for which to retrieve subcategories from. Can be null. </param>
+        /// <returns> A list of SubcategoryDto containing subcategory information.</returns> 
         Task<List<SubcategoryDto>> GetSubcategoriesForCategoryByIdAsync(int? categoryId);
     }
 
+    /// <summary>
+    /// Implementation of the subcategory service.
+    /// </summary>
     public class SubcategoryService : ISubcategoryService
     {
         private readonly ISubcategoryRepository _subcategoryRepository;

@@ -3,13 +3,36 @@ using ContactsApp.Server.DTOs;
 
 namespace ContactsApp.Server.Services
 {
+    /// <summary>
+    /// Interface for the category service.
+    /// </summary>
     public interface ICategoryService
     {
+        /// <summary>
+        /// Retrieves a list of categories.
+        /// </summary>
+        /// <returns>
+        /// A list of CategoryDto containing category information.
+        /// </returns>
         Task<List<CategoryDto>> GetCategoriesAsync();
 
+
+        /// <summary>
+        /// Retrieves the ID of a category by its name.
+        /// </summary>
+        /// <param name="categoryName">
+        /// The name of the category to search for. Can be null.
+        /// </param>
+        /// <returns>
+        /// The ID of the category if found, null otherwise.
+        /// </returns>
         Task<int?> GetCategoryIdAsync(string? categoryName);
     }
 
+
+    /// <summary>
+    /// Implementation of the category service.
+    /// </summary>
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;

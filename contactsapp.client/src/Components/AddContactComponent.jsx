@@ -150,7 +150,7 @@ function AddContactForm({ onSubmit, startContact = {} }) {
 
             <br></br>
 
-            <button type="submit">Add Contact</button>
+            <button type="submit">Confirm Contact</button>
         </form>
     );
 }

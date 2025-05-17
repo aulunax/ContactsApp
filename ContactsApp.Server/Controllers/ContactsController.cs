@@ -8,6 +8,9 @@ using System.Security.Claims;
 
 namespace ContactsApp.Server.Controllers
 {
+    /// <summary>
+    /// Controller for handling contact-related actions.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class ContactsController : ControllerBase
@@ -20,14 +23,6 @@ namespace ContactsApp.Server.Controllers
         }
 
         // GET: api/Contacts/{contactId}
-        /// <summary>
-        /// Get detailed contact info for contactId.
-        /// </summary>
-        /// <param name="contactId">Integer representing Id of the Contact</param>
-        /// <returns>
-        /// Returns a detailed contact info for a contact with contactId.
-        /// </returns>
-
         [HttpGet("{contactId}")]
         public async Task<ActionResult<ContactDto>> GetContactForUser(int contactId)
         {
@@ -43,6 +38,7 @@ namespace ContactsApp.Server.Controllers
         }
 
 
+        // Post: api/Contacts
         [HttpPost]
         [Authorize]
         public async Task<ActionResult<bool>> AddContact([FromBody] ContactDto contactDto)
@@ -65,6 +61,7 @@ namespace ContactsApp.Server.Controllers
             return Ok();
         }
 
+        // PUT: api/Contacts
         [Authorize]
         [HttpPut("{contactId}")]
         public async Task<ActionResult<bool>> UpdateContact(int contactId, [FromBody] ContactDto contactDto)
@@ -88,30 +85,23 @@ namespace ContactsApp.Server.Controllers
             return Ok();
         }
 
-        
+        // DELETE: api/Contacts/{contactId}
         [Authorize]
         [HttpDelete("{contactId}")]
         public async Task<ActionResult<bool>> DeleteContact(int contactId)
         {
-            Console.WriteLine($"DeleteContact called with contactId: {contactId}");
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var contact = await _service.GetContactById(contactId);
             var userIdFromContact = contact?.UserId;
 
-            Console.WriteLine($"userId: {userId}, userIdFromContact: {userIdFromContact}");
-
             if (userId == null || int.Parse(userId) != userIdFromContact)
                 return Unauthorized("Unauthorized Access");
-
-            Console.WriteLine($"Deleting contact with ID: {contactId}");
 
             var result = await _service.DeleteContactAsync(contactId);
 
             if (result == false)
                 return BadRequest("Failed to delete contact");
-
-            Console.WriteLine($"Contact with ID: {contactId} deleted successfully");
 
             return Ok();
         }

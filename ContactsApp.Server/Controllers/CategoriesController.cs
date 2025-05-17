@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsApp.Server.Controllers
 {
+    /// <summary>
+    /// Controller for handling category-related actions.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class CategoriesController : ControllerBase

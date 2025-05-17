@@ -2,6 +2,10 @@
 
 namespace ContactsApp.Server.DTOs
 {
+
+    /// <summary>
+    /// Full DTO for a contact.
+    /// </summary>
     public class ContactDto
     {
         public int Id { get; set; }

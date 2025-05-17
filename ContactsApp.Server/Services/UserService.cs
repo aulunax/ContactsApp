@@ -3,12 +3,31 @@ using ContactsApp.Server.DTOs;
 
 namespace ContactsApp.Server.Services
 {
+    /// <summary>
+    /// Interface for the user service.
+    /// </summary>
     public interface IUserService
     {
+        /// <summary>
+        /// Retrieves all users.
+        /// </summary>
+        /// <returns>
+        /// List of UserDto containing user information.
+        /// </returns>
         Task<List<UserDto>> GetAllUsersAsync();
+
+        /// <summary>
+        /// Checks if a user with given ID exists.
+        /// </summary>
+        /// <param name="id"> User ID to check.</param>
+        /// <returns> True if user exists, false otherwise.</returns>
         Task<bool> UserExistsAsync(int id);
     }
 
+
+    /// <summary>
+    /// Implementation of the user service.
+    /// </summary>
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;

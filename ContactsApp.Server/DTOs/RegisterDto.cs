@@ -2,6 +2,10 @@
 
 namespace ContactsApp.Server.DTOs
 {
+
+    /// <summary>
+    /// DTO for user registration.
+    /// </summary>
     public class RegisterDto
     {
         [Required]

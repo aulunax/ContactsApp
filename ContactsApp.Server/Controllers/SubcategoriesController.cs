@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsApp.Server.Controllers
 {
+    /// <summary>
+    /// Controller for handling subcategory-related actions.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class SubcategoriesController : ControllerBase
@@ -18,7 +21,7 @@ namespace ContactsApp.Server.Controllers
         }
 
 
-
+        // GET api/Subcategories/{categoryId}
         [HttpGet("{categoryId}")]
         public async Task<ActionResult<SubcategoryDto>> GetSubcategoriesFromCategoryById(int categoryId)
         {

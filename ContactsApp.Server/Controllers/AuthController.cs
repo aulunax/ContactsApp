@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsApp.Server.Controllers
 {
+
+    /// <summary>
+    /// Controller for handling authentication-related actions.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -18,6 +22,8 @@ namespace ContactsApp.Server.Controllers
             _authService = authService;
         }
 
+
+        // POST api/auth/login
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login([FromBody] LoginDto loginDto)
         {
@@ -29,6 +35,7 @@ namespace ContactsApp.Server.Controllers
             return Ok(jwtToken);
         }
 
+        // POST api/auth/register
         [HttpPost("register")]
         public async Task<ActionResult<AuthResultDto>> Register([FromBody] RegisterDto registerDto)
         {
