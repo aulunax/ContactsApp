@@ -6,6 +6,10 @@ using System.Reflection.Metadata;
 
 namespace ContactsApp.Server.Data
 {
+
+    /// <summary>
+    /// Entity Framework Core DbContext for contacts and users.
+    /// </summary>
     public class ContactsDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
 

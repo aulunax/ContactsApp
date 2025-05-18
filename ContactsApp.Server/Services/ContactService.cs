@@ -6,15 +6,100 @@ namespace ContactsApp.Server.Services
 {
     public interface IContactService
     {
+        /// <summary>
+        /// Retrieves all contacts for a given user ID.
+        /// </summary>
+        /// <param name="userId">
+        /// The ID of the user whose contacts to retrieve.
+        /// </param>
+        /// <returns>
+        /// A list of ContactDto objects representing the user's contacts.
+        /// </returns>
         Task<List<ContactDto>> GetAllContactsForUserIdAsync(int userId);
+
+        /// <summary>
+        /// Retrieves all contacts for a given user ID, only containing basic information.
+        /// </summary>
+        /// <param name="userId">
+        /// The ID of the user whose contacts to retrieve.
+        /// </param>
+        /// <returns>
+        /// A list of BasicContactDto objects representing the user's contacts with basic information.
+        /// </returns>
         Task<List<BasicContactDto>> GetAllBasicContactsForUserIdAsync(int userId);
+
+        /// <summary>
+        /// Checks if a contact with given ID exists.
+        /// </summary>
+        /// <param name="contactId">
+        /// The ID of the contact to check.
+        /// </param>
+        /// <returns>
+        /// True if the contact exists, false otherwise.
+        /// </returns>
         Task<bool> ContactExistsAsync(int contactId);
+
+        /// <summary>
+        /// Checks if a contact with given ID exists for a specific user.
+        /// </summary>
+        /// <param name="contactId">
+        /// The ID of the contact to check.
+        /// </param>
+        /// <param name="userId">
+        /// The ID of the user to check against.
+        /// </param>
+        /// <returns>
+        /// True if the contact exists for the user, false otherwise.
+        /// </returns>
         Task<bool> ContactExistsInUserAsync(int contactId, int userId);
 
+
+        /// <summary>
+        /// Adds a new contact to the database.
+        /// </summary>
+        /// <param name="contactDto">
+        /// The contact data to add. Ignores Id field, auto creates new one.
+        /// </param>
+        /// <returns>
+        /// True if the contact was added successfully, false otherwise.
+        /// </returns>
         Task<bool> AddContactAsync(ContactDto contactDto);
+
+        /// <summary>
+        /// Updates a contact with contactId.
+        /// </summary>
+        /// <param name="contactId">
+        /// The ID of the contact to update.
+        /// </param>
+        /// <param name="contactDto">
+        /// The contact data to update. Ignores Id field.
+        /// </param>
+        /// <returns>
+        /// True if the contact was updated successfully, false otherwise.
+        /// </returns>
         Task<bool> UpdateContactAsync(int contactId, ContactDto contactDto);
+
+        /// <summary>
+        /// Deletes a contact with contactId.
+        /// </summary>
+        /// <param name="contactId">
+        /// The ID of the contact to delete.
+        /// </param>
+        /// <returns>
+        /// True if the contact was deleted successfully, false otherwise.
+        /// </returns>
         Task<bool> DeleteContactAsync(int contactId);
 
+
+        /// <summary>
+        /// Retrieves a contact by its ID.
+        /// </summary>
+        /// <param name="contactId">
+        /// The ID of the contact to retrieve.
+        /// </param>
+        /// <returns>
+        /// The ContactDto object if found, null otherwise.
+        /// </returns>
         Task<ContactDto?> GetContactById(int contactId);   
     }
 
@@ -76,6 +161,7 @@ namespace ContactsApp.Server.Services
                 Email = contact.Email,
                 PhoneNumber = contact.PhoneNumber,
                 Category = contact.Category?.Name,
+                // If subcategory is empty, we assume it's a custom subcategory (which should be empty if Category != "Other")
                 Subcategory = string.IsNullOrEmpty(contact.Subcategory?.Name) ? contact.CustomSubcategory : contact.Subcategory?.Name,
                 BirthDate = contact.BirthDate,
                 UserId = contact.UserId

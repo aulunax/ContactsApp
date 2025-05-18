@@ -58,13 +58,16 @@ namespace ContactsApp.Server.Controllers
         [HttpGet("me")]
         async public Task<ActionResult<UserDto>> UserMe()
         {
+            // Get the user ID from the JWT token
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+            // Check if the user ID from the token exists
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 
             var user = await _userService.GetUserByIdAsync(int.Parse(userId));
 
+            // Check if the user exists
             if (user == null)
                 return Unauthorized();
 

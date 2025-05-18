@@ -32,6 +32,7 @@ namespace ContactsApp.Server.Controllers
         [HttpGet("{categoryName}")]
         public async Task<ActionResult<int?>> GetCategoryId(string? categoryName)
         {
+            // Validate the input
             if (string.IsNullOrEmpty(categoryName))
             {
                 return BadRequest("Category name cannot be null or empty.");
@@ -39,6 +40,7 @@ namespace ContactsApp.Server.Controllers
 
             var categoryId = await _categoryService.GetCategoryIdAsync(categoryName);
 
+            // Check if the category ID was found
             if (categoryId == null)
             {
                 return NotFound($"Category '{categoryName}' not found.");

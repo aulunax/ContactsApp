@@ -5,12 +5,76 @@ namespace ContactsApp.Server.Data
 {
     public interface IContactRepository
     {
+        /// <summary>
+        /// Checks if a contact with given ID exists in the database.
+        /// </summary>
+        /// <param name="contactId">
+        /// The ID of the contact to check.
+        /// </param>
+        /// <returns>
+        /// True if the contact exists, false otherwise.
+        /// </returns>
         Task<bool> ContactExistsByIdAsync(int contactId);
+
+        /// <summary>
+        /// Retrieves all contacts for a given user ID from database.
+        /// </summary>
+        /// <param name="userId">
+        /// The ID of the user whose contacts to retrieve.
+        /// </param>
+        /// <returns>
+        /// A list of Contact objects associated with the user ID.
+        /// </returns>
         Task<List<Contact>> GetAllContactsForUserIdAsync(int userId);
+
+        /// <summary>
+        /// Retrieves a contact by its ID from database.
+        /// </summary>
+        /// <param name="contactId">
+        /// The ID of the contact to retrieve.
+        /// </param>
+        /// <returns>
+        /// The Contact object if found, null otherwise.
+        /// </returns>
         Task<Contact?> GetContactByIdAsync(int contactId);
 
+
+        /// <summary>
+        /// Adds a new contact to the database.
+        /// </summary>
+        /// <param name="contact">
+        /// Contact data to add.
+        /// Ignores Id, auto creates new one.
+        /// </param>
+        /// <returns>
+        /// True if the contact was added successfully, false otherwise.
+        /// </returns>
         Task<bool> AddContactAsync(Contact contact);
+
+        /// <summary>
+        /// Updates a contact in database by contactId.
+        /// Doesn't change userId or Id
+        /// </summary>
+        /// <param name="contactId">
+        /// Id of the contact to update.
+        /// </param>
+        /// <param name="contact">
+        /// TContact data to update the contact with contactId with.
+        /// </param>
+        /// <returns>
+        /// True if the contact was updated successfully, false otherwise.
+        /// </returns>
         Task<bool> UpdateContactAsync(int contactId, Contact contact);
+
+        /// <summary>
+        /// Deletes a contact from database by contactId.
+        /// </summary>
+        /// <param name="contactId">
+        /// Id of the contact to delete.
+        /// </param>
+        /// <returns>
+        /// True if the contact was deleted successfully, false otherwise.
+        /// </returns>
         Task<bool> DeleteContactAsync(int contactId);
 
     }
@@ -63,13 +127,7 @@ namespace ContactsApp.Server.Data
             }
         }
 
-        /// <summary>
-        /// Update a contact by contactId.
-        /// Can't change userId or Id
-        /// </summary>
-        /// <param name="contactId"></param>
-        /// <param name="updatedContact"></param>
-        /// <returns></returns>
+
         public async Task<bool> UpdateContactAsync(int contactId, Contact updatedContact)
         {
             var existingContact = await GetContactByIdAsync(contactId);

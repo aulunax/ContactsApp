@@ -29,6 +29,7 @@ namespace ContactsApp.Server.Controllers
 
             var contact = await _service.GetContactById(contactId);
 
+            // Check if the contact exists
             if (contact == null)
             {
                 return NotFound();
@@ -44,19 +45,23 @@ namespace ContactsApp.Server.Controllers
         public async Task<ActionResult<bool>> AddContact([FromBody] ContactDto contactDto)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return BadRequest(false);
 
+            // Get the user ID from the JWT token
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+            // Check if the user ID from the token exists and matches the user ID in the contact DTO
             if (userId == null || int.Parse(userId) != contactDto.UserId)
                 return Unauthorized("Unauthorized Access");
 
+
             var result = await _service.AddContactAsync(contactDto);
 
+            // Check if the contact was added successfully
             if (result == false)
                 return BadRequest("Failed to add contact");
 
-            return Ok();
+            return Ok(true);
         }
 
         // PUT: api/Contacts
@@ -65,22 +70,27 @@ namespace ContactsApp.Server.Controllers
         public async Task<ActionResult<bool>> UpdateContact(int contactId, [FromBody] ContactDto contactDto)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return BadRequest(false);
 
+            // Get the user ID from the JWT token
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var contact = await _service.GetContactById(contactId);
+
+            // Get user ID from the contact
             var userIdFromContact = contact?.UserId;
 
+            // Check if the user ID from the token exists and matches the user ID in both the contact DTO and the contact from the database
             if (userId == null || int.Parse(userId) != contactDto.UserId || int.Parse(userId) != userIdFromContact)
                 return Unauthorized("Unauthorized Access");
 
             var result = await _service.UpdateContactAsync(contactId, contactDto);
 
+            // Check if the contact was updated successfully
             if (result == false)
                 return BadRequest("Failed to update contact");
 
-            return Ok();
+            return Ok(true);
         }
 
         // DELETE: api/Contacts/{contactId}
@@ -88,20 +98,23 @@ namespace ContactsApp.Server.Controllers
         [HttpDelete("{contactId}")]
         public async Task<ActionResult<bool>> DeleteContact(int contactId)
         {
+            // Get the user ID from the JWT token
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var contact = await _service.GetContactById(contactId);
             var userIdFromContact = contact?.UserId;
 
+            // Check if the user ID from the token exists and matches the user ID in the contact DTO
             if (userId == null || int.Parse(userId) != userIdFromContact)
                 return Unauthorized("Unauthorized Access");
 
             var result = await _service.DeleteContactAsync(contactId);
 
+            // Check if the contact was deleted successfully
             if (result == false)
                 return BadRequest("Failed to delete contact");
 
-            return Ok();
+            return Ok(true);
         }
     }
 }

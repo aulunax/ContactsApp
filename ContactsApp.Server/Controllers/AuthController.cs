@@ -35,6 +35,7 @@ namespace ContactsApp.Server.Controllers
             if (jwtToken == null)
                 return Unauthorized("Invalid credentials");
 
+            // Set the token in cookie
             Response.Cookies.Append("accessToken", jwtToken, new CookieOptions
             {
                 HttpOnly = true,
@@ -52,7 +53,7 @@ namespace ContactsApp.Server.Controllers
         {
             var result = await _authService.RegisterAsync(registerDto);
 
-
+            // Prepere success status and error messages
             var authResult = new AuthResultDto
             {
                 Succeeded = result.Succeeded,
