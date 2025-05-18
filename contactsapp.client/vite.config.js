@@ -47,26 +47,10 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '^/api/Users': {
+            '^/api': {
                 target,
                 secure: false
             },
-            '^/api/Contacts': {
-                target,
-                secure: false
-            },
-            '^/api/Categories': {
-                target,
-                secure: false
-            },
-            '^/api/Subcategories': {
-                target,
-                secure: false
-            },
-            '^/api/Auth': {
-                target,
-                secure: false
-            }
         },
         port: parseInt(env.DEV_SERVER_PORT || '53820'),
         https: {
