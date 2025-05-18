@@ -22,6 +22,17 @@ namespace ContactsApp.Server.Services
         /// <param name="id"> User ID to check.</param>
         /// <returns> True if user exists, false otherwise.</returns>
         Task<bool> UserExistsAsync(int id);
+
+        /// <summary>
+        /// Retrieves a user by their ID.
+        /// </summary>
+        /// <param name="id">
+        /// The ID of the user to retrieve.
+        /// </param>
+        /// <returns>
+        /// The UserDto object if found, null otherwise.
+        /// </returns>
+        Task<UserDto?> GetUserByIdAsync(int id);
     }
 
 
@@ -49,6 +60,20 @@ namespace ContactsApp.Server.Services
         public async Task<bool> UserExistsAsync(int id)
         {
             return await _userRepository.UserExistsByIdAsync(id);
+        }
+
+        public async Task<UserDto?> GetUserByIdAsync(int id)
+        {
+            var user = await _userRepository.UserByIdAsync(id);
+
+            if (user == null)
+                return null;
+
+            return new UserDto
+            {
+                Id = user.Id,
+                Username = user.UserName,
+            };
         }
     }
 }

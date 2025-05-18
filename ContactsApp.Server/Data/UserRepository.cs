@@ -38,6 +38,17 @@ namespace ContactsApp.Server.Data
         /// </returns>
         Task<User?> UserByEmailAsync(string email);
 
+        /// <summary>
+        /// Retrieves a user by their ID.
+        /// </summary>
+        /// <param name="id">
+        /// The ID of the user to retrieve.
+        /// </param>
+        /// <returns>
+        /// The User object if found, null otherwise.
+        /// </returns>
+        Task<User?> UserByIdAsync(int id);
+
     }
 
     /// <summary>
@@ -66,6 +77,12 @@ namespace ContactsApp.Server.Data
         {
             return await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == email);
+        }
+
+        public async Task<User?> UserByIdAsync(int id)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(u => u.Id == id);
         }
     }
 }

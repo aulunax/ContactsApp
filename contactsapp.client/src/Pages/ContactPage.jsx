@@ -13,22 +13,32 @@ function ContactPage() {
     const { userId, contactId } = useParams();
     const [ contactData, setContactData] = useState(null);
     const [ editing, setEditing ] = useState(false);
+    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+    const [loggedInUserId, setLoggedInUserId] = useState(null);
 
     const navigate = useNavigate();
 
 
     useEffect(() => {
         populateContactData();
+        checkLoginState();
     }, []);
+
+    async function checkLoginState() {
+        const loggedIn = await isLoggedIn();
+        const id = await getLoggedInUserId();
+        setIsUserLoggedIn(loggedIn);
+        setLoggedInUserId(id);
+    }
 
     return (
         <div>
             <Link to={`/users/${userId}`}>Go back</Link>
             <h2>Contact Details:</h2>
             {<UsernameInfo />}
-            {(isLoggedIn() && (getLoggedInUserId() == userId)) ? <button onClick={() => handleDeleteContactInside(contactId)}>Delete</button> : ""}
-            {(isLoggedIn() && (getLoggedInUserId() == userId)) && !editing ? <button onClick={() => handleEditContactInside()}>Edit</button> : ""}
-            {(isLoggedIn() && (getLoggedInUserId() == userId)) && editing ? <button onClick={() => handleCancelEditContact()}>Cancel Edit</button> : ""}
+            {(isUserLoggedIn && (loggedInUserId == userId)) ? <button onClick={() => handleDeleteContactInside(contactId)}>Delete</button> : ""}
+            {(isUserLoggedIn && (loggedInUserId == userId)) && !editing ? <button onClick={() => handleEditContactInside()}>Edit</button> : ""}
+            {(isUserLoggedIn && (loggedInUserId == userId)) && editing ? <button onClick={() => handleCancelEditContact()}>Cancel Edit</button> : ""}
 
             <div>
                 {editing ? <AddContactForm onSubmit={async (contact) => updateContact(contact)} startContact={contactData} /> : 
@@ -65,8 +75,10 @@ function ContactPage() {
 
     async function updateContact(contact) {
 
+        console.log(contact.birthDate)
+
         const contactDto = {
-            id: 0,
+            id: contact.id,
             name: contact.name,
             surname: contact.surname,
             email: contact.email,
@@ -74,16 +86,17 @@ function ContactPage() {
             category: contact.category,
             subcategory: contact.subcategory,
             birthDate: contact.birthDate,
-            userId: getLoggedInUserId()
+            userId: loggedInUserId
         };
 
         try {
             await axios.put(`/api/Contacts/${contactData.id}`, contactDto)
-            navigate(`/users/${getLoggedInUserId()}/`)
+            navigate(`/users/${loggedInUserId}/`)
         } catch (err) {
             console.error('Error updating contact:', err);
         }
         setEditing(false);
+        setContactData(contactDto);
     }
 
  
@@ -91,7 +104,6 @@ function ContactPage() {
     function populateContactData() {
         axios.get(`/api/Contacts/${contactId}`)
             .then(response => {
-                console.log(response.data)
                 setContactData(response.data);
             })
             .catch(error => {

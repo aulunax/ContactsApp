@@ -9,6 +9,9 @@ using ContactsApp.Server.Data;
 using ContactsApp.Server.Models;
 using ContactsApp.Server.Services;
 using ContactsApp.Server.DTOs;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace ContactsApp.Server.Controllers
 {
@@ -47,6 +50,25 @@ namespace ContactsApp.Server.Controllers
             var contactList = await _contactService.GetAllBasicContactsForUserIdAsync(userId);
 
             return contactList;
+        }
+
+
+        // GET api/Users/me
+        [Authorize]
+        [HttpGet("me")]
+        async public Task<ActionResult<UserDto>> UserMe()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var user = await _userService.GetUserByIdAsync(int.Parse(userId));
+
+            if (user == null)
+                return Unauthorized();
+
+            return Ok(user);
         }
     }
 }

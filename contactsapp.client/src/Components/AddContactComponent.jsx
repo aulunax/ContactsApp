@@ -21,18 +21,17 @@ function AddContactForm({ onSubmit, startContact = {} }) {
     async function handleChange(e) {
         const { name, value } = e.target;
         setFormData(prev => ({
-            ...prev, [name]: value, ...(name === "category" && { subcategory: "" }),
+            ...prev, [name]: value, 
  }));
 
         if (name === "category" && value != "Other") {
-            const filtered = await fetchSubcategories(value);
-            console.log(filtered);
-            setSubcategories(filtered);
+            await fetchSubcategories(value);
         }
     }
 
     useEffect(() => {
         fetchCategories()
+        fetchSubcategories(formData.category);
     }, []);
 
     async function fetchCategories() {
@@ -46,15 +45,16 @@ function AddContactForm({ onSubmit, startContact = {} }) {
 
     async function fetchSubcategories(categoryName) {
         try {
-            console.log(categoryName);
-            var categoryId = await axios.get(`/api/Categories/${categoryName}`);
-            console.log(categoryId.data);
-            var response = await axios.get(`/api/Subcategories/${categoryId.data}`);
-            console.log(response.data);
-            return response.data;
+            if (categoryName != "") {
+                var categoryId = await axios.get(`/api/Categories/${categoryName}`);
+                var response = await axios.get(`/api/Subcategories/${categoryId.data}`);
+                setSubcategories(response.data);
+                return;
+            }
+            setSubcategories([]);
         } catch (err) {
             console.error('fetchSubcategories Error:', err);
-            return [];
+            return;
         }
     }
    

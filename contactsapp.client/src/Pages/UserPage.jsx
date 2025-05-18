@@ -11,32 +11,41 @@ function UserPage() {
 
     const { userId } = useParams(); 
     const [contactsData, setContactsData] = useState(null);
+    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+    const [loggedInUserId, setLoggedInUserId] = useState(null);
 
     const navigate = useNavigate();
 
     useEffect(() => {
         populateContactsData();
+        checkLoginState();
+
     }, []);
+
+    async function checkLoginState() {
+        const loggedIn = await isLoggedIn();
+        const id = await getLoggedInUserId();
+        setIsUserLoggedIn(loggedIn);
+        setLoggedInUserId(id);
+    }
 
     async function handleAddContact(contact) {
 
         const contactDto = {
             id: 0,
             name: contact.name,
-            surname: contact.surname,
+            surname: contact.surname || null,
             email: contact.email,
-            phoneNumber: contact.phoneNumber,
-            category: contact.category,
-            subcategory: contact.subcategory,
-            birthDate: contact.birthDate,
-            userId: getLoggedInUserId()
+            phoneNumber: contact.phoneNumber || null,
+            category: contact.category || null,
+            subcategory: contact.subcategory  || null,
+            birthDate: contact.birthDate || null,
+            userId: parseInt(loggedInUserId)
         };
 
         try {
-            console.log("handleAddContact:");
-            console.log(contactDto);
             await axios.post(`/api/Contacts`, contactDto)
-            navigate(`/users/${getLoggedInUserId()}/`)
+            navigate(`/users/${loggedInUserId}}/`)
         } catch (err) {
             console.error('Error adding contact:', err);
         }
@@ -47,7 +56,7 @@ function UserPage() {
             <Link to={`/`}>Go back</Link>
             <h2>Contacts:</h2>
             {<UsernameInfo />}
-            {(isLoggedIn() && (getLoggedInUserId() == userId)) ? <AddContactForm onSubmit={async (contact) => handleAddContact(contact)} /> : ''}
+            {(isUserLoggedIn && (loggedInUserId == userId)) ? <AddContactForm onSubmit={async (contact) => handleAddContact(contact)} /> : ''}
             
             <div>
                 {contactsData  ?

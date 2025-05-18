@@ -1,20 +1,42 @@
 
-import { jwtDecode } from "jwt-decode";
+import axios from "./axios";
 
-export function isLoggedIn() {
-    const token = localStorage.getItem("token");
-    return token !== null;
+export async function isLoggedIn() {
+    try {
+        const res = await axios.get("/api/Users/me");
+
+        return !!res.data?.id;
+    } catch (err) {
+        return false;
+    }
 }
 
-export function getLoggedInUserId() {
-    const token = localStorage.getItem("token");
-    if (!token) return null;
+export async function getLoggedInUserId() {
     try {
-        const decodedToken = jwtDecode(token);
-        return decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
-    } catch (error) {
-        console.error("Invalid token", error);
+        const res = await axios.get("/api/Users/me");
+
+        return res.data?.id || null;
+    } catch (err) {
         return null;
     }
 }
 
+export async function getLoggedInUsername() {
+    try {
+        const res = await axios.get("/api/Users/me");
+
+        return res.data?.username || null;
+    } catch (err) {
+        return null;
+    }
+}
+
+export async function logout() {
+    try {
+        await axios.post("/api/Auth/logout");
+
+        return true;
+    } catch (err) {
+        return false;
+    }
+}

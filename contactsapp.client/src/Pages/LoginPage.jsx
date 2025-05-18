@@ -40,18 +40,21 @@ function LoginPage() {
         setError("");
 
         try {
-            const response = await axios.post("/api/Auth/login", { username, password });
+            await axios.post("/api/Auth/login", { username, password });
 
-            const token = response.data;
+            const res = await axios.get("/api/Users/me");
 
-            localStorage.setItem("token", token);
-            axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-            navigate("/");
+            if (res.data?.id) {
+                navigate("/");
+            } else {
+                setError("Login failed");
+            }
         } catch (err) {
             setError("Invalid username or password.");
         }
     }
+
+
 }
 
 export default LoginPage;

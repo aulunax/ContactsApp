@@ -51,8 +51,6 @@ namespace ContactsApp.Server.Controllers
             if (userId == null || int.Parse(userId) != contactDto.UserId)
                 return Unauthorized("Unauthorized Access");
 
-            System.Console.WriteLine($"Adding contact: {contactDto.Name}, {contactDto.Surname}, {contactDto.Email}, {contactDto.PhoneNumber}, {contactDto.Category}, {contactDto.Subcategory}, {contactDto.BirthDate}");
-
             var result = await _service.AddContactAsync(contactDto);
 
             if (result == false)

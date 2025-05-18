@@ -1,34 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import { getLoggedInUsername, logout } from '../Services/auth';
+import axios from '../Services/axios';
 
 function UsernameInfo() {
     const [username, setUsername] = useState('');
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
 
-        if (token) {
-            try {
-                const decoded = jwtDecode(token);
-                const nameClaim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name";
-
-                setUsername(decoded[nameClaim] || '');
-            } catch (err) {
-                console.error('Invalid token', err);
-            }
-        }
+        (async () => {
+            const name = await getLoggedInUsername();
+            setUsername(name);
+        })();
     }, []);
 
     if (!username) return <p>Not logged in. <Link to="/login">Login</Link> or <Link to="/register">Register</Link></p>;
 
     return <p>Hello {username}! <button onClick={handleLogout}>Logout</button></p>;
 
-    function handleLogout() {
-        localStorage.removeItem('token');
-        setUsername('');
+    async function handleLogout() {
+        var success = await logout();
+
+        if (!success) {
+            console.error('Logout failed');
+            return;
+        }
+
+        setUsername(null);
         window.location.reload();
     }
+
 }
 
 export default UsernameInfo;
