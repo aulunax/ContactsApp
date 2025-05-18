@@ -4,7 +4,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from '../Services/axios';
 
 import '../App.css'; 
-import AddContactForm from '../Components/AddContactComponent';
+import ContactForm from '../Components/ContactComponent';
 import { isLoggedIn, getLoggedInUserId } from '../Services/auth';
 import UsernameInfo from '../Components/UsernameComponent'
 function UserPage() {
@@ -56,7 +56,7 @@ function UserPage() {
             <Link to={`/`}>Go back</Link>
             <h2>Contacts:</h2>
             {<UsernameInfo />}
-            {(isUserLoggedIn && (loggedInUserId == userId)) ? <AddContactForm onSubmit={async (contact) => handleAddContact(contact)} /> : ''}
+            {(isUserLoggedIn && (loggedInUserId == userId)) ? <ContactForm onSubmit={async (contact) => handleAddContact(contact)} /> : ''}
             
             <div>
                 {contactsData  ?

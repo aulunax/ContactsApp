@@ -7,7 +7,7 @@ import '../App.css';
 import { handleDeleteContact } from '../Services/contact';
 import { isLoggedIn, getLoggedInUserId } from '../Services/auth';
 import UsernameInfo from '../Components/UsernameComponent'
-import AddContactForm from '../Components/AddContactComponent';
+import ContactForm from '../Components/ContactComponent';
 function ContactPage() {
 
     const { userId, contactId } = useParams();
@@ -41,7 +41,7 @@ function ContactPage() {
             {(isUserLoggedIn && (loggedInUserId == userId)) && editing ? <button onClick={() => handleCancelEditContact()}>Cancel Edit</button> : ""}
 
             <div>
-                {editing ? <AddContactForm onSubmit={async (contact) => updateContact(contact)} startContact={contactData} /> : 
+                {editing ? <ContactForm onSubmit={async (contact) => updateContact(contact)} startContact={contactData} /> : 
                     (contactData ?
                         <div key={contactData.id}>
                             <p>Name: {contactData.name}</p>

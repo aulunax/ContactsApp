@@ -3,7 +3,7 @@ import axios from '../Services/axios';
 
 
 
-function AddContactForm({ onSubmit, startContact = {} }) {
+function ContactForm({ onSubmit, startContact = {} }) {
     const [formData, setFormData] = useState({
         name: '',
         surname: '',
@@ -95,7 +95,7 @@ function AddContactForm({ onSubmit, startContact = {} }) {
 
             <label>Phone Number: </label>
             <input
-                type="text"
+                type="tel"
                 name="phoneNumber"
                 value={formData.phoneNumber}
                 onChange={handleChange}
@@ -155,4 +155,4 @@ function AddContactForm({ onSubmit, startContact = {} }) {
     );
 }
 
-export default AddContactForm;
+export default ContactForm;

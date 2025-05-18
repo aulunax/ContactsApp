@@ -41,8 +41,7 @@ namespace ContactsApp.Server.Data
             // Contact and Categories setup
 
             modelBuilder.Entity<Contact>()
-                .HasIndex(u => u.Email)
-                .IsUnique();
+                .HasIndex(u => u.Email);
 
             modelBuilder.Entity<Contact>()
                 .HasOne(c => c.Category)
