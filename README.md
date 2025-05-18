@@ -1,5 +1,5 @@
 # ContactsApp
-
+Hasło do kont już istniejących w .db: abcABC123!
 
 ## Uruchamianie
 ### Visual Studio 2022
